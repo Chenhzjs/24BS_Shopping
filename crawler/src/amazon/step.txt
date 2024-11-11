@@ -1,0 +1,9 @@
+import asyncio
+from playwright.async_api import async_playwright
+async with async_playwright() as p:
+    browser = await p.chromium.launch(headless=False)
+    context = await browser.new_context()
+    
+    page = await context.new_page()
+    url = f"https://www.amazon.com/s?k=phone&__mk_zh_CN=亚马逊网站"
+    await page.goto(url)

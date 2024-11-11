@@ -55,6 +55,8 @@ async def scrape_taobao(keyword):
         page = await context.new_page()
         await context.route("**/*", lambda route, request: 
         route.abort() if request.resource_type in ["image", "font"] else route.continue_())
+        # https://www.ebay.com/sch/i.html?_nkw=phone&_sacat=0&_fcid=45
+        # https://www.amazon.com/s?k=phone&__mk_zh_CN=亚马逊网站&crid=1G3TEXHHJHP9J&sprefix=pho,aps,412&ref=nb_sb_noss_2
         url = f"https://s.taobao.com/search?q={keyword}"
         await page.goto(url)
         await page.wait_for_load_state('load')
