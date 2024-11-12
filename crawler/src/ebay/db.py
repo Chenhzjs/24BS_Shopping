@@ -1,12 +1,20 @@
 import mysql.connector
+import platform
+
+# 根据操作系统设置不同的密码
+if platform.system() == "Windows":
+    db_password = "Hz040719"  # Windows 下的密码
+else:
+    db_password = ""    # macOS 下的密码
 
 def save_to_db(iterms):
     # 配置数据库连接
     connection = mysql.connector.connect(
         host="localhost",      # 替换为你的数据库主机地址
         user="root",      # 替换为你的数据库用户名
-        password="Hz040719",  # 替换为你的数据库密码
-        database="Amazon"   # 替换为你的数据库名称
+    
+        password=db_password,  # 替换为你的数据库密码
+        database="ebay"   # 替换为你的数据库名称
     )
 
     cursor = connection.cursor()

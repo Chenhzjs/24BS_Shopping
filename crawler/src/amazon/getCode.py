@@ -15,7 +15,7 @@ async def scrape_amazon(keyword):
         # await context.route("**/*", lambda route, request: 
         # route.abort() if request.resource_type in ["image", "font"] else route.continue_())
         # 
-        url = f"https://www.amazon.com/s??language=zh_CN&currency=USD&k={keyword}&__mk_zh_CN=亚马逊网站"
+        url = f"https://www.amazon.com/s?language=zh_CN&currency=USD&k={keyword}&__mk_zh_CN=亚马逊网站"
         await page.goto(url)
         # await page.wait_for_load_state('load')
         # change country to China
