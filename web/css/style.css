@@ -111,11 +111,31 @@ h2 {
     font-weight: bold;
     cursor: pointer;
 }
-
+.reset {
+    width: 100%;
+    padding: 12px;
+    background-color: #6e8efb;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
 .btn:hover {
     background-color: #576fea;
 }
 
+.send-to-email {
+    width: 100%;
+    padding: 12px;
+    background-color: #6e8efb;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
 .back-to-login a {
     display: block;
     margin-top: 20px;
