@@ -4,7 +4,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     // 获取用户输入
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    const rememberMe = document.getElementById('rememberMe').checked;
+    // const rememberMe = document.getElementById('rememberMe').checked;
 
     // 检查用户名和密码是否为空
     if (username === '' || password === '') {
@@ -26,15 +26,25 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         },
         body: JSON.stringify(sendData) // 将登录数据转为 JSON 发送
     })
-    .then(response => response.json()) // 解析 JSON 响应
-    .then(data => {
-        if (data.success) {
-            // 登录成功，跳转到 main.html
-            window.location.href = 'main.html';
+    .then(response => {
+        if (response.ok) {
+            return response.text(); // 假设后端返回HTML内容
         } else {
-            // 登录失败，显示错误信息
-            alert(data.message);
+            throw new Error('搜索请求失败');
         }
+    })
+    .then(html => {
+        // console.log(html);
+        // localStorage.removeItem('searchStyle');
+        localStorage.removeItem('searchBody');
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const styleContent = Array.from(doc.querySelectorAll('style')).map(style => style.innerHTML).join('\n');
+        const bodyContent = doc.body.innerHTML;
+
+        // localStorage.setItem('searchStyle', styleContent);
+        localStorage.setItem('searchBody', bodyContent);
+        window.location.href = 'search.html';
     })
     .catch(error => {
         console.error('登录请求失败:', error);

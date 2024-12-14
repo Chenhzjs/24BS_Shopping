@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索页面</title>
+</head>
+<body>
+    <div class="user-menu">
+        <button id="userButton">用户菜单</button>
+        <div class="dropdown" id="dropdownMenu">
+            <div id="userInfo">
+                <span>用户ID:</span>
+                <a id="userId">{{ user.id }}</a>
+            </div>
+            <button type="submit" class="btn" id="profileButton">个人中心</button>
+        </div>
+    </div>
+    <div class="container">
+        <form id="searchForm" class="login-form">
+            <h2>搜索</h2>
+            <div class="input-group">
+                <input type="text" id="searchInput" placeholder="请输入搜索内容" required>
+            </div>
+            <button type="submit" class="btn">搜索</button>
+        </form>
+    </div>
+    <script>
+    </script>
+</body>
+</html>

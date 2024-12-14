@@ -2,14 +2,143 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>搜索结果</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="login-container">
-        <h2>搜索结果</h2>
-        <div id="resultContainer"></div>
-    </div>
-    <script src="js/result_script.js"></script>
+
+    <script>
+       window.addEventListener('DOMContentLoaded', (event) => {
+            // 获取存储的内容
+            console.log('DOMContentLoaded');
+            // const styleContent = localStorage.getItem('searchResultStyle');
+            // const scriptContent = localStorage.getItem('searchResultScript');
+            const bodyContent = localStorage.getItem('searchResultBody');
+
+            // 如果有样式内容，则创建并添加到 <head> 中
+            // if (styleContent) {
+            //     const styleTag = document.createElement('style');
+            //     styleTag.innerHTML = styleContent;
+            //     document.head.appendChild(styleTag);
+            // }
+            if (bodyContent) {
+                document.body.innerHTML = bodyContent;
+            }
+            const items = document.querySelectorAll('.item');
+
+            // 遍历每个商品
+            items.forEach(item => {
+                dataId = item.getAttribute('data-id');
+                if (localStorage.getItem(dataId) === 'marked') {
+                    // 如果标记过，添加 'marked' 类
+                    item.classList.add('marked');
+                    item.querySelector('.btn').textContent = 'Cancel mark';
+                }
+            });
+            const userButton = document.getElementById('userButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            userButton.addEventListener('click', () => {
+                const isVisible = dropdownMenu.style.display === 'block';
+                dropdownMenu.style.display = isVisible ? 'none' : 'block';
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!userButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.style.display = 'none';
+                }
+            });
+            const profileButton = document.getElementById('profileButton');
+            profileButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                console.log('profile');
+                const id = document.getElementById('userId').textContent.trim();
+                console.log('id: ' + id);
+                fetch('http://localhost:5001/user/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: id
+                        }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); 
+                    } else {
+                        throw new Error('请求失败');
+                    }
+                })
+                .then(html => {
+                    // localStorage.removeItem('searchStyle');
+                    localStorage.removeItem('profileBody');
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // const styleContent = Array.from(doc.querySelectorAll('style')).map(style => style.innerHTML).join('\n');
+                    const bodyContent = doc.body.innerHTML;
+
+                    // localStorage.setItem('searchStyle', styleContent);
+                    localStorage.setItem('profileBody', bodyContent);
+
+                    window.location.href = 'profile.html';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('请求失败，请稍后重试');
+                });
+            });
+            document.querySelectorAll('.btn').forEach(item => {
+                item.addEventListener('click', function() {
+                    // console.log('Mark button clicked');
+                    const parentElement = this.closest('.item'); // 使用 closest 选择最近的父元素
+                    const dataId = parentElement.getAttribute('data-id'); // 获取父元素的 data-id
+                    const parentParentElement = parentElement.closest('.column');
+                    const platform_title = parentParentElement.getAttribute('id');
+                    const platform = (platform_title == 'amazon-products') ? '0' : '1';
+                    const user_id = document.getElementById('userId').textContent.trim();
+                    // 弹出 data-id 的值，确保已正确获取
+                    console.log('Data ID: ' + dataId);
+
+                    // 切换标记样式
+                    parentElement.classList.toggle('marked');
+                    if (parentElement.classList.contains('marked')) {
+                        this.textContent = 'Cancel mark';
+                        localStorage.setItem(dataId, 'marked');
+                    } else {
+                        this.textContent = 'Mark';
+                        localStorage.removeItem(dataId);
+                    }
+
+                    // 假设需要将标记信息发送到后端
+                    fetch('http://localhost:5001/index/mark', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            user_id: user_id, // 发送用户 ID
+                            id: dataId,  // 发送获取的 data-id
+                            platform: platform, // 发送获取的 platform
+                            marked: parentElement.classList.contains('marked') // 是否标记
+                        }),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('标记失败');
+                        }
+                        console.log('标记信息已发送');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('标记失败，请稍后重试');
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>

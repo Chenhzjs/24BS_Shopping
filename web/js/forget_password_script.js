@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const codeSection = document.getElementById('code-section');
     const codeInput = document.getElementById('code');
     const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirm-password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
 
     // 处理发送重置链接
     sendEmailBtn.addEventListener('click', function() {

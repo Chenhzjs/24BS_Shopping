@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <h2>个人中心</h2>
+            <p>欢迎回来</p>
+            <p id="userId">{{ user.id }}</p>
+            <a onclick="window.history.back()">返回上一级页面</a>
+            <p>愿望清单</p>
+        </div>
+        <div class="marked-items" id="markedItems">
+            {% if products %}
+                {% for product in products %}
+                    <div class="item" data-id="{{ product.id }}">
+                        <a href="{{ product.url }}">
+                            <p>{{ product.title }}</p>
+                            <p>{{ product.price }}</p>
+                        </a>
+
+                        <button class="btn"> Cancel mark </button>
+                        <button class="btn2"> See Price Curve </button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>您尚未标记任何商品</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

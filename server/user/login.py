@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from werkzeug.security import check_password_hash
 from . import user
 from db import connection
@@ -28,7 +28,8 @@ def login():
     cursor.close()
     conn.close()
 
+    user_id = {'id': user['username']}
     # 验证密码
     if user and check_password_hash(user['password'], password):  # 使用哈希密码进行验证
-        return jsonify({'success': True})
+        return render_template('search.html', user=user_id)
     return jsonify({'success': False, 'message': '用户名、邮箱或密码错误'}), 401

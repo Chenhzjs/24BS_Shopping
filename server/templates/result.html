@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索结果</title>
+    <style>
+    </style>
+</head>
+<body>
+    <div class="user-menu">
+        <button id="userButton">用户菜单</button>
+        <div class="dropdown" id="dropdownMenu">
+            <div id="userInfo">
+                <span>用户ID:</span>
+                <a id="userId">{{ user.id }}</a>
+            </div>
+            <button type="submit" class="btn" id="profileButton">个人中心</button>
+        </div>
+    </div>
+    <div class="title">
+        <h2>搜索结果</h2>
+    <div class="list">
+        <!-- 左侧 Amazon 产品 -->
+        <div class="column" id="amazon-products">
+            <h3>Amazon</h3>
+            {% for product in products %}
+                {% if product.platform == 'Amazon' %}
+                <div class="item" data-id="{{ product.id }}">
+                    <a href="{{ product.url }}">
+                        <div class="container">
+                            <img src="{{ product.image_url }}" alt="dynamic picture" style="width:50%; height:auto;">
+                        </div>
+                        <p>{{ product.title }}</p>
+                        <p>{{ product.price }}</p>
+                    </a>
+                    <button class="btn"> Mark </button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        <!-- 右侧 eBay 产品 -->
+        <div class="column" id="ebay-products">
+            <h3>eBay</h3>
+            {% for product in products %}
+                {% if product.platform == 'ebay' %}
+                <div class="item" data-id="{{ product.id }}">
+                    <a href="{{ product.url }}">
+                        <div class="container">
+                            <img src="{{ product.image_url }}" alt="dynamic picture" style="width:50%; height:auto;">
+                        </div>
+                        <p>{{ product.title }}</p>
+                        <p>{{ product.price }}</p>
+                    </a>
+                    <button class="btn"> Mark </button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -10,7 +10,7 @@ def register():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-
+    print(username, email, password)
     # # 检查必填字段
     # if not username or not email or not password:
     #     return jsonify({'success': False, 'message': '用户名、邮箱和密码不能为空'}), 400
@@ -33,7 +33,7 @@ def register():
     
     # 插入新用户数据
     cursor.execute(
-        "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
+        "INSERT INTO users (username, email, password, recover_time) VALUES (%s, %s, %s, NULL)",
         (username, email, generate_password_hash(password)) 
     )
     conn.commit()

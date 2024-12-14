@@ -2,19 +2,128 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>搜索页面</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="login-container">
-        <form id="searchForm" class="login-form">
-            <h2>搜索</h2>
-            <div class="input-group">
-                <input type="text" id="searchInput" placeholder="请输入搜索内容" required>
-            </div>
-            <button type="submit" class="btn">搜索</button>
-        </form>
+    <div class="container">
+        <h2>请先登录</h2>
+        <a href="login.html">点此跳转</a>
     </div>
-    <script src="js/search_script.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+
+            console.log('DOMContentLoaded');
+            // const styleContent = localStorage.getItem('searchStyle');
+            const bodyContent = localStorage.getItem('searchBody');
+
+            if (bodyContent) {
+                document.body.innerHTML = bodyContent;
+            }
+            const userButton = document.getElementById('userButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            userButton.addEventListener('click', () => {
+                const isVisible = dropdownMenu.style.display === 'block';
+                dropdownMenu.style.display = isVisible ? 'none' : 'block';
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!userButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.style.display = 'none';
+                }
+            });
+            const profileButton = document.getElementById('profileButton');
+            profileButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                console.log('profile');
+                const id = document.getElementById('userId').textContent.trim();
+                console.log('id: ' + id);
+                fetch('http://localhost:5001/user/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: id
+                        }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); 
+                    } else {
+                        throw new Error('请求失败');
+                    }
+                })
+                .then(html => {
+                    // localStorage.removeItem('searchStyle');
+                    localStorage.removeItem('profileBody');
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // const styleContent = Array.from(doc.querySelectorAll('style')).map(style => style.innerHTML).join('\n');
+                    const bodyContent = doc.body.innerHTML;
+
+                    // localStorage.setItem('searchStyle', styleContent);
+                    localStorage.setItem('profileBody', bodyContent);
+
+                    window.location.href = 'profile.html';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('请求失败，请稍后重试');
+                });
+            });
+
+            document.getElementById('searchForm').addEventListener('submit', function (e) {
+                e.preventDefault(); 
+
+                const query = document.getElementById('searchInput').value.trim();
+                const id = document.getElementById('userId').textContent.trim();
+                if (query) {
+                    fetch('http://localhost:5001/index/search', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id: id,
+                            query: query
+                            }),
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text(); 
+                        } else {
+                            throw new Error('搜索请求失败');
+                        }
+                    })
+                    .then(html => {
+                        // localStorage.removeItem('searchResultStyle');
+                        localStorage.removeItem('searchResultBody');
+
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+
+                        // const styleContent = Array.from(doc.querySelectorAll('style')).map(style => style.innerHTML).join('\n');
+                        const bodyContent = doc.body.innerHTML;
+
+                        // localStorage.setItem('searchResultStyle', styleContent);
+                        localStorage.setItem('searchResultBody', bodyContent);
+
+                        window.location.href = 'result.html';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('搜索失败，请稍后重试');
+                    });
+                } else {
+                    alert('请输入搜索内容');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

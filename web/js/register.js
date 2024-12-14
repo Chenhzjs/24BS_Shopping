@@ -22,6 +22,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
 
     const sendData = {
         username: username,
+        email: email,
         password: password
     };
 

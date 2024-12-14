@@ -18,17 +18,21 @@ import re
 def extract_content(page_info):
     shops = page_info.find('span', attrs={'data-component-type': 's-search-results'})
     # print(shops)
-    iterms = shops.find_all('div', attrs={'data-component-type':'s-search-result'})
-    # print(len(iterms))
+    iterms = shops.find_all('div', attrs={'data-component-type': 's-search-result'})
+    print(len(iterms))
     # print(iterms[0])
     for iterm in iterms:
         # print("*****************")
         ########### image&title&url ############
+        iterm_id = iterm.get('data-asin')
+        # print(iterm_id)
         _image = iterm.find('span',attrs={'data-component-type':'s-product-image'})
         image = _image.find('img')
         image_url = image.get('src')
+        # print(image_url)
         iterm_title = image.get('alt')
         iterm_url = "https://www.amazon.com" + _image.find('a').get('href')
+        # print(iterm_url)
         # data-cy="reviews-block"
         ########### star&customer ############
         star_and_customer = iterm.find('div', attrs={'data-cy':'reviews-block'})
@@ -51,13 +55,17 @@ def extract_content(page_info):
                 customer = customer.strip()
         ########### price ############
         price = iterm.find('div', attrs={'data-cy':'price-recipe'})
-        #  <span class="a-offscreen">
-        price = price.find('span', attrs={'class':'a-offscreen'})
-        if (price is None):
+        if price is not None:
+            price = price.find('span', attrs={'class':'a-offscreen'})
+            if (price is None):
+                price = "No price"
+            else:  
+                price = price.get_text()
+                price = price.strip()
+        else: 
             price = "No price"
-        else:  
-            price = price.get_text()
-            price = price.strip()
+        #  <span class="a-offscreen">
+        
         # print(price)
         # print(iterm_title)
         # print(iterm_url)
@@ -65,42 +73,19 @@ def extract_content(page_info):
         # print(star)
         # print(customer)
         # print(price)
+        if price == "No price":
+            continue
+
         item_info = {
+            'id': iterm_id,
             'title': iterm_title,
             'url': iterm_url,
             'image_url': image_url,
             'star': star,
             'customer': customer,
-            'price': "No price" if price == "No price" else price[2:]
+            'price': "No price" if price == "No price" else price
         }
         yield item_info
-        # print(star)
-        # print(customer)
-        # if (iterm == iterms[0]):
-            # print(star)
-            
-            # print(star_and_customer.prettify())
-        #     for i in range(len(star)):
-        #         print(star[i].prettify())
-        # print(image_url)
-        # print(iterm_title)
-        # print(iterm_url)
-        # print(iterm.prettify())
-        # print(iterm.find('a', class_=re.compile
-    # length = len(title)
-
-    # prev_start = content.find(title)
-    # print(prev_start)
-    # content = content[prev_start:]
-    # # print(content[:200])
-    # # exit(1)
-    # while content[length:].find(title) != -1:
-    #     start = content[length:].find(title) + length
-    #     yield content[:start]
-    #     prev_start = start
-    #     content = content[prev_start:]
-
-    # yield content
 
 def process_page_info(page_info):
     content_list = extract_content(page_info)
@@ -108,3 +93,9 @@ def process_page_info(page_info):
     #     print(content)
     #     print("*****************")
     return content_list
+
+# with open('result.out', 'r') as file:
+#     page_info = file.read()
+#     page_info = BeautifulSoup(page_info, 'html.parser')
+#     # print(page_info.prettify())
+#     process_page_info(page_info)
