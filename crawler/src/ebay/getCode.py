@@ -22,7 +22,7 @@ def scrape_ebay_curl(keyword):
                                 },
                                 impersonate="chrome101")
         page_info = BeautifulSoup(page_info.content, 'html.parser')
-        print(page_info.prettify())
+        # print(page_info.prettify())
         content_list = process_page_info(page_info)
         
 

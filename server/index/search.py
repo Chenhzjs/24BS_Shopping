@@ -5,6 +5,7 @@ from db import connection
 import threading
 import os
 
+root_dir = "/Users/chenhz/Documents/work-station/BS"
 def search_tags(cursor, words):
     for i in range(len(words), 0, -1):
         query = "SELECT id,title,image_url,price,url FROM products WHERE " + " AND ".join(["title LIKE %s"] * len(words[:i]))

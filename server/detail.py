@@ -5,7 +5,9 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 import platform
 from index.mail import send_email_to
+from currency_converter import converter
 import re
+currency_keys = ['AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN', 'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL', 'BSD', 'BTC', 'BTN', 'BWP', 'BYN', 'BZD', 'CAD', 'CDF', 'CHF', 'CLF', 'CLP', 'CNH', 'CNY', 'COP', 'CRC', 'CUC', 'CUP', 'CVE', 'CZK', 'DJF', 'DKK', 'DOP', 'DZD', 'EGP', 'ERN', 'ETB', 'EUR', 'FJD', 'FKP', 'GBP', 'GEL', 'GGP', 'GHS', 'GIP', 'GMD', 'GNF', 'GTQ', 'GYD', 'HKD', 'HNL', 'HRK', 'HTG', 'HUF', 'IDR', 'ILS', 'IMP', 'INR', 'IQD', 'IRR', 'ISK', 'JEP', 'JMD', 'JOD', 'JPY', 'KES', 'KGS', 'KHR', 'KMF', 'KPW', 'KRW', 'KWD', 'KYD', 'KZT', 'LAK', 'LBP', 'LKR', 'LRD', 'LSL', 'LYD', 'MAD', 'MDL', 'MGA', 'MKD', 'MMK', 'MNT', 'MOP', 'MRU', 'MUR', 'MVR', 'MWK', 'MXN', 'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PGK', 'PHP', 'PKR', 'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', 'RWF', 'SAR', 'SBD', 'SCR', 'SDG', 'SEK', 'SGD', 'SHP', 'SLL', 'SOS', 'SRD', 'SSP', 'STD', 'STN', 'SVC', 'SYP', 'SZL', 'THB', 'TJS', 'TMT', 'TND', 'TOP', 'TRY', 'TTD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VES', 'VND', 'VUV', 'WST', 'XAF', 'XAG', 'XAU', 'XCD', 'XDR', 'XOF', 'XPD', 'XPF', 'XPT', 'YER', 'ZAR', 'ZMW', 'ZWL']
 
 if platform.system() == "Windows":
     db_password = "Hz040719"  # Windows 下的密码
@@ -41,7 +43,7 @@ def fetch_marked_items():
             platform = item["platform"]
             uuid = item["uuid"]
 
-            if platform == 0:
+            if platform == "0":
                 database = "Amazon"
             else:
                 database = "ebay"
@@ -51,10 +53,12 @@ def fetch_marked_items():
                 password=db_password,
                 database=database
             )
+            print(f"正在处理    平台: {database}, UUID: {uuid}")
             cursor = conn.cursor(dictionary=True)
 
             product_query = f"SELECT url, price FROM products WHERE id = %s"
             cursor.execute(product_query, (uuid,))
+            # print(product_query)
             product = cursor.fetchall()
             print(len(product))
             if (len(product) != 0):
@@ -87,12 +91,39 @@ def scrape_product_info(platform, url, price, uuid):
                     impersonate="chrome101")
         if page_info.status_code == 200:
             soup = BeautifulSoup(page_info.content, "html.parser")
-            if platform == 0:
-                price_span = soup.find("span", attrs={'class': 'aok-offscreen'})
-                with open("product_info.txt", "w") as file:
+            
+            if platform == "0":
+                price_spans = soup.findAll("span", attrs={'class': 'aok-offscreen'})
+                # print(price_spans)
+                for price_span_tmp in price_spans:
+                    # 如果class只有 aok-offscreen，说明是价格
+                    if price_span_tmp.get("class") == ['aok-offscreen']:
+                        price_span = price_span_tmp
+                        break
+
+                with open("product_info_amazon.txt", "w") as file:
                     file.write(soup.prettify())
                 if price_span:
                     new_price = price_span.get_text(strip=True)
+                    new_price = new_price.replace(",", "")
+                    # print(price)
+                    new_prices = extract_numbers(new_price)
+                    new_price_num = new_prices[0]
+
+                    # # find price_num in price
+                    new_price_index = new_price.find(str(new_price_num))
+                    new_price = price[:new_price_index + len(str(new_price_num))]
+                    new_price_currency = new_price[:new_price_index]
+                    if new_price_currency != '$' and new_price_currency != 'USD' and new_price_currency != 'US$' and new_price_currency != 'US $':
+                        if "元" in price or "¥" in price:
+                            new_price_currency = "CNY"
+                        # print(price_currency)
+                        if new_price_currency not in currency_keys:
+                            return 
+                        rate = converter.get_exchange_rate('USD', new_price_currency)
+                        new_price_num = new_price_num / rate
+                    new_price = '$' + str(new_price_num)
+                    print(new_price)
                     # insert into db
                     database = "Amazon"
                     conn = mysql.connector.connect(
@@ -110,10 +141,10 @@ def scrape_product_info(platform, url, price, uuid):
                     conn.commit()
                     cursor.close()
                     conn.close()
-                    new_price = extract_numbers(new_price)
+                    new_prices = extract_numbers(new_price)
                     prices = extract_numbers(price)
                     print(f"商品价格: {price} -> {new_price}")
-                    if (prices <= new_price):
+                    if (prices[0] < new_prices[0]):
                         # query all users who has marked this item
                         conn = mysql.connector.connect(
                             host="localhost",
@@ -131,13 +162,33 @@ def scrape_product_info(platform, url, price, uuid):
                             email = cursor.fetchone()["email"]
                             title = "你标记的商品正在降价销售"
                             body = f"你标记的商品正在降价销售，原价为 {price}，现价为 {new_price}，请尽快查看！"
-                            send_email_to(email, title, body, 1)
+                            send_email_to(email, title, body, 0)
                 else:
                     print("价格信息未找到")
             else:
-                price_span = soup.find("span", attrs={'class': 'x-price-approx__price'})
+                price_span = soup.find("div", attrs={'class': 'x-price-primary'})
+                if price_span is None:
+                    price_span = soup.find("span", attrs={'class': 'x-price-approx__price'})
+                with open("product_info_ebay.txt", "w") as file:
+                    file.write(soup.prettify())
                 if price_span:
                     new_price = price_span.get_text(strip=True)
+                    new_price = new_price.replace(",", "")
+                    # print(new_price)
+                    new_prices = extract_numbers(new_price)
+                    new_price_num = new_prices[0]
+                    # # find new_price_num in new_price
+                    new_price_index = new_price.find(str(new_price_num))
+                    new_price_currency = new_price[:new_price_index]
+                    if new_price_currency != '$' and new_price_currency != 'USD' and new_price_currency != 'US$' and new_price_currency != 'US $':
+                        if "元" in new_price or "¥" in new_price:
+                            new_price_currency = "CNY"
+                        # print(new_price_currency)
+                        if new_price_currency not in currency_keys:
+                            return 
+                        rate = converter.get_exchange_rate('USD', new_price_currency)
+                        new_price_num = new_price_num / rate
+                    new_price = '$' + str(new_price_num)
                     # insert into db
                     database = "ebay"
                     conn = mysql.connector.connect(
@@ -158,8 +209,8 @@ def scrape_product_info(platform, url, price, uuid):
                     conn.close()
                     new_prices = extract_numbers(new_price)
                     prices = extract_numbers(price)
-                    print(f"商品价格: {price} -> {new_prices}")
-                    if (prices <= new_prices):
+                    print(f"商品价格: {price} -> {new_price}")
+                    if (prices[0] < new_prices[0]):
                         # query all users who has marked this item
                         conn = mysql.connector.connect(
                             host="localhost",
@@ -176,7 +227,7 @@ def scrape_product_info(platform, url, price, uuid):
                             title = "你标记的商品正在降价销售"
                             p_title = product["title"]
                             body = f"你标记的商品 {p_title} 正在降价销售，原价为 {price}，现价为 {new_price}，请尽快查看！"
-                            send_email_to(email, title, body, 1)
+                            send_email_to(email, title, body, 0)
                         cursor.close()
                         conn.close()
                         
@@ -196,9 +247,9 @@ def background_task():
     持续运行的子线程任务，每隔固定时间检查数据库。
     """
     while True:
-        time.sleep(3600*24)  # 每 1 天检查一次
         print("开始检查 marked_items...")
         fetch_marked_items()
+        time.sleep(120*1)  
 
 
 def start_background_task():
@@ -207,5 +258,5 @@ def start_background_task():
     thread.start()
     print("子线程已启动")
 
-# if __name__ == "__main__":
-#     fetch_marked_items()
+if __name__ == "__main__":
+    fetch_marked_items()

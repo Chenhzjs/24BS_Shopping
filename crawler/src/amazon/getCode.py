@@ -21,8 +21,8 @@ def scrape_amazon_curl(keyword):
 
         page_info = BeautifulSoup(page_info.content, 'html.parser')
         
-        with open("product_info.txt", "w") as file:
-            file.write(page_info.prettify())
+        # with open("product_info.txt", "w") as file:
+        #     file.write(page_info.prettify())
         # print("商品信息已保存！")
         # print(page_info.prettify())
         # 爬取商品信息并保存到文件

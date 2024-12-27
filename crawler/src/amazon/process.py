@@ -67,6 +67,7 @@ def extract_content(page_info):
                 price = "No price"
             else:  
                 price = price.get_text().strip()
+                price = price.replace(",", "")
                 # print(price)
                 prices = extract_numbers(price)
                 price_num = prices[0]
@@ -77,6 +78,9 @@ def extract_content(page_info):
                     price_currency = '$'
                 if price_currency != '$' and price_currency != 'USD' and price_currency != 'US$':
                     # print(price_currency)
+                    if "元" in price or "¥" in price:
+                        price_currency = "CNY"
+                    print(price_currency)
                     if price_currency not in currency_keys:
                         continue
                     rate = converter.get_exchange_rate(price_currency, 'USD')

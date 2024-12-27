@@ -43,7 +43,7 @@ def forgotPassword():
             subject = f"您的验证码是：{recover_code}"  # 邮件主题
             body = f'尊敬的用户，\n\n您好！您的验证码是：{recover_code}。请在 10 分钟内输入验证码完成验证。\n\n如果您没有进行此操作，请忽略本邮件。\n\n感谢您的使用！\n\n[公司名称] 客服团队\n'  # 邮件正文内容
             
-            send_email_to(email, subject, body, 1)
+            send_email_to(email, subject, body, 0)
             return jsonify({'success': True})
         
         return jsonify({'success': False, 'message': '找不到当前邮箱'}), 401
