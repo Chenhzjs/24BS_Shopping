@@ -1,6 +1,7 @@
 import sys
 from ebay.getCode import ebay_run
 from amazon.getCode import amazon_run
+
 if __name__ == "__main__":
     keyword = ""
     if len(sys.argv) > 2:

@@ -15,15 +15,17 @@ def scrape_ebay_curl(keyword):
         # https://www.ebay.com/sch/i.html?_nkw=phone&_sacat=0&_fcid=45
     n = 2
     for i in range(1, n):
-        url = f"https://www.ebay.com/sch/i.html?currency=USD&_nkw={keyword}&_sacat=0&_fcid=45&_pgn={i}"
+        url = f"https://www.ebay.com/sch/i.html?_nkw={keyword}&_sacat=0&_fcid=45&_pgn={i}"
         page_info = requests.get(url, 
                                 headers={
                                     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36'
                                 },
                                 impersonate="chrome101")
         page_info = BeautifulSoup(page_info.content, 'html.parser')
-        
+        print(page_info.prettify())
         content_list = process_page_info(page_info)
+        
+
         save_to_db(content_list)
 
 

@@ -23,7 +23,7 @@ def scrape_amazon_curl(keyword):
         
         with open("product_info.txt", "w") as file:
             file.write(page_info.prettify())
-        print("商品信息已保存！")
+        # print("商品信息已保存！")
         # print(page_info.prettify())
         # 爬取商品信息并保存到文件
         content_list = process_page_info(page_info)
