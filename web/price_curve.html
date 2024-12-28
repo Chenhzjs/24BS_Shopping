@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="chart-container">
 
     <h2>价格曲线</h2>
     <canvas id="priceChart"></canvas>
@@ -25,18 +25,17 @@
             if (!priceData) {
                 console.error('价格数据不存在');
             } else {
-                const time = priceData.map(item => new Date(item.time));  // 将时间字符串转换为 Date 对象
-                const prices = priceData.map(item => parseFloat(item.price.replace('$', '')));  // 去掉 '$' 符号并转换为数字
+                const time = priceData.map(item => new Date(item.time));  
+                const prices = priceData.map(item => parseFloat(item.price.replace('$', '')));  
                 
-                // 创建价格曲线图
                 const ctx = document.getElementById('priceChart').getContext('2d');
                 const priceChart = new Chart(ctx, {
-                    type: 'line',  // 曲线图
+                    type: 'line',  
                     data: {
-                        labels: time,  // 时间戳作为 X 轴
+                        labels: time,  
                         datasets: [{
                             label: '价格',
-                            data: prices,  // 价格数据
+                            data: prices,  
                             borderColor: 'rgba(75, 192, 192, 1)',
                             fill: false
                         }]
@@ -45,10 +44,10 @@
                         responsive: true,
                         scales: {
                             x: {
-                                type: 'time', // 时间类型的 X 轴
+                                type: 'time', 
                                 time: {
-                                    unit: 'minute',  // 可以设置时间单位为 'minute', 'hour', 'day' 等
-                                    tooltipFormat: 'll HH:mm'  // 格式化工具提示显示格式
+                                    unit: 'minute',  
+                                    tooltipFormat: 'll HH:mm'  
                                 },
                                 title: {
                                     display: true,
@@ -61,9 +60,9 @@
                                     text: '价格'
                                 },
                                 ticks: {
-                                    beginAtZero: false,  // 不从零开始
+                                    beginAtZero: false,  
                                     callback: function(value) {
-                                        return value.toFixed(2);  // 显示价格时加上 '$' 符号
+                                        return value.toFixed(2);  
                                     }
                                 }
                             }

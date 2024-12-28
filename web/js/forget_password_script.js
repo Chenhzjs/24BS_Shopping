@@ -7,11 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
 
-    // 处理发送重置链接
     sendEmailBtn.addEventListener('click', function() {
         const email = emailInput.value.trim();
 
-        // 验证邮箱格式
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailPattern.test(email)) {
             alert('请输入有效的邮箱地址');
@@ -20,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         alert(`密码重置链接已发送至: ${email}`);
         
-        // 模拟调用后台接口发送重置邮件
+
         const sendData = { step: '0', email: email };
         fetch('http://localhost:5001/user/forgotPassword', {
             method: 'POST',
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 console.log('密码重置邮件已发送');
-                // 显示恢复码输入部分
                 codeSection.style.display = 'block';
             } else {
                 alert(data.message);
@@ -45,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 处理恢复码验证
     resetBtn.addEventListener('click', function() {
         const code = codeInput.value.trim();
         if (!code) {
@@ -53,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // 模拟调用后台接口验证恢复码
         if (passwordInput.value !== confirmPasswordInput.value) {
             alert('密码和确认密码不一致');
             return;

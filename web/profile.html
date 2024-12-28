@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人中心</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -23,7 +24,7 @@
             }
             const items = document.querySelectorAll('.item');
 
-            // 遍历每个商品
+
             items.forEach(item => {
                 dataId = item.getAttribute('data-id');
                 if (localStorage.getItem(dataId) === 'marked') {
@@ -38,25 +39,23 @@
             }
             document.querySelectorAll('.btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    const parentElement = button.closest('.item'); // 获取该按钮所在的商品项
-                    const dataId = parentElement.dataset.id; // 获取商品的 data-id
+                    const parentElement = button.closest('.item'); 
+                    const dataId = parentElement.dataset.id; 
                     const parentParentElement = parentElement.closest('.marked-items');
                     const platform = '-1';
                     const user_id = document.getElementById('userId').textContent.trim();
-                    // 弹出 data-id 的值，确保已正确获取
                     console.log('Data ID: ' + dataId);
 
-                    // 假设需要将标记信息发送到后端
                     fetch('http://localhost:5001/index/mark', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            user_id: user_id, // 发送用户 ID
-                            id: dataId,  // 发送获取的 data-id
-                            platform: platform, // 发送获取的 platform
-                            marked: false // 是否标记
+                            user_id: user_id, 
+                            id: dataId,  
+                            platform: platform, 
+                            marked: false 
                         }),
                     })
                     .then(response => {
@@ -81,30 +80,27 @@
             });
             document.querySelectorAll('.btn2').forEach(button => {
                 button.addEventListener('click', function() {
-                    const parentElement = button.closest('.item'); // 获取该按钮所在的商品项
-                    const dataId = parentElement.dataset.id; // 获取商品的 data-id
+                    const parentElement = button.closest('.item'); 
+                    const dataId = parentElement.dataset.id; 
 
 
-                    // 假设需要将标记信息发送到后端
                     fetch('http://localhost:5001/index/price_curve', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            uid: dataId,  // 发送获取的 data-id
+                            uid: dataId,  
                         }),
                     })
-                    .then(response => response.json()) // 确保将响应解析为 JSON
+                    .then(response => response.json()) 
                     .then(data => {
                         console.log('价格曲线数据:', data);
-                        // 清除旧的缓存
+
                         localStorage.removeItem('priceCurveJson');
 
-                        // 将 JSON 数据存储到 localStorage
                         localStorage.setItem('priceCurveJson', JSON.stringify(data));
 
-                        // 跳转到价格曲线页面
                         window.location.href = 'price_curve.html';
                     })
                     .catch(error => {

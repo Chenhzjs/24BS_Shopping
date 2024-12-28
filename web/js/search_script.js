@@ -1,11 +1,9 @@
 document.getElementById('searchForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // 阻止表单默认提交
+    e.preventDefault(); 
 
     const query = document.getElementById('searchInput').value.trim();
-    // 清除存储的 HTML
     localStorage.removeItem('savedSearchResult');
     if (query) {
-        // 创建请求体
         fetch('http://localhost:5001/index/search', {
             method: 'POST',
             headers: {
@@ -15,7 +13,7 @@ document.getElementById('searchForm').addEventListener('submit', function (e) {
         })
         .then(response => {
             if (response.ok) {
-                return response.text(); // 假设后端返回HTML内容
+                return response.text(); 
             } else {
                 throw new Error('搜索请求失败');
             }

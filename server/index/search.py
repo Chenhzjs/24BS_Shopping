@@ -21,11 +21,11 @@ def search_tags(cursor, words):
 def collect_data(web_num, keywords):
     # 用于存储错误信息
     error_message = []
-    print(f"python ../crawler/src/main.py {web_num} {keywords}")
+    print(f"python3 ../crawler/src/main.py {web_num} {keywords}")
     # 定义运行爬虫的函数
     def run_crawler():
         try:
-            os.system(f"python ../crawler/src/main.py {web_num} {keywords}")
+            os.system(f"python3 ../crawler/src/main.py {web_num} {keywords}")
         except Exception as e:
             # 捕获异常并将错误信息存储到 error_message 列表中
             error_message.append(str(e))

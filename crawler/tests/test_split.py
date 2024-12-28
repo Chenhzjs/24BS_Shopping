@@ -58,7 +58,6 @@ for iterm in iterms:
     # 使用BeautifulSoup解析HTML
 
 
-    # 提取商品名称
     # title = soup.find("span", class_="").get_text().strip()
     title = soup_find("span", "")
 
@@ -72,22 +71,17 @@ for iterm in iterms:
     # views = soup.find("div", class_=re.compile("summaryADWrapper")).get_text().strip()
     views = soup_find("div", "summaryADWrapper--........")
 
-    # 提取价格信息
     # price = soup.find("span", class_=re.compile("priceInt")).get_text().strip()
     price = soup_find("span", "priceInt--........")
 
-    # 提取付款人数
     # sales = soup.find("span", class_=re.compile("realSales")).get_text().strip()
     sales = soup_find("span", "realSales--........")
 
-    # 提取商品销售地
     # location = soup.find("div", class_=re.compile("procity")).get_text().strip()
     location = soup_find("div", "procity--........")
 
-    # 提取促销信息
     # promotion = [span.get_text().strip() for span in soup.find_all("span", style="color: rgb(255, 98, 0);")]
 
-    # 打印提取的内容
     print(f"商品名称: {title}")
     print(f"商品链接: {url}")
     print(f"商品图片: {image_url}")

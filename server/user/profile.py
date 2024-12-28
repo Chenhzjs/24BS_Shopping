@@ -3,18 +3,18 @@ from werkzeug.security import check_password_hash
 from . import user
 from db import connection
 
-# 登录接口
+
 @user.route('/profile', methods=['POST'])
 def profile():
-    data = request.get_json()  # 获取前端发送的 JSON 数据
-    identifier = data.get('username')  # 用户名或邮箱
+    data = request.get_json()  
+    identifier = data.get('username')  
     # print(identifier)
     conn = connection.get_db_connection("user")
     cursor = conn.cursor(dictionary=True)
 
     if "@" in identifier:  
         cursor.execute("SELECT id FROM users WHERE email = %s", (identifier,))
-    else:  # 如果输入的是用户名
+    else:  
         cursor.execute("SELECT id FROM users WHERE username = %s", (identifier,))
     user_index = cursor.fetchone() 
     user_id = user_index['id']

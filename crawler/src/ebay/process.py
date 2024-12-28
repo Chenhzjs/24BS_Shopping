@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 from currency_converter import converter
 import re
 def extract_numbers(input_string):
-    # 使用正则表达式匹配整数和小数
     numbers = re.findall(r'-?\d+\.?\d*', input_string)
     return [float(num) if '.' in num else int(num) for num in numbers]
 
@@ -29,15 +28,10 @@ def extract_content(page_info):
     iterms = shops.find_all('li', attrs={'class':'s-item s-item__pl-on-bottom'})
     iterm_final = shops.find('li', attrs={'class':'s-item s-item__before-answer s-item__pl-on-bottom'})
     iterms = iterms + [iterm_final]
-    # print(len(iterms))
-    # print(shops)
     # iterms = shops.find_all('div', attrs={'data-component-type':'s-search-result'})
-    # print(len(iterms))
-    # print(iterms[0])
     for iterm in iterms:
         if iterm is None:
             continue
-    #     # print("*****************")
     #     ########### image&title&url ############
         id = iterm.get('id')
         title = iterm.find('div', attrs={'class':'s-item__title'}).get_text().strip()
@@ -133,20 +127,3 @@ def process_page_info(page_info):
     #     print(content)
     #     print("*****************")
     return content_list
-
-# read process_info.txt file
-# file_path = 'product_info.txt'
-# try:
-#     with open(file_path, 'r') as file:
-#         content = file.read()
-#         page_info = BeautifulSoup(content, 'html.parser')
-# except FileNotFoundError:
-#     print(f"File '{file_path}' not found.")
-# except IOError:
-#     print(f"Error reading file '{file_path}'.")
-# # print(page_info.prettify())
-# content_list = process_page_info(page_info)
-
-# for content in content_list:
-#     print(content)
-#     print("*****************")

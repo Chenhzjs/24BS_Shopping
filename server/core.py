@@ -5,13 +5,12 @@ from flask_cors import CORS
 from user import user
 from index import index
 from db import connection
-import detail
+
 def create_core():
-    # 创建 Flask 应用
+
     core = Flask(__name__)
     CORS(core)
 
-    # 注册蓝图
     core.register_blueprint(user, url_prefix='/user')
     core.register_blueprint(index, url_prefix='/index')
     print(core.url_map)
@@ -80,5 +79,4 @@ def create_tables():
     conn.close()
 if __name__ == '__main__':
     create_tables()
-    detail.start_background_task()
     core.run(debug=True, host='0.0.0.0', port=5001)

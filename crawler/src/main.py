@@ -19,5 +19,5 @@ if __name__ == "__main__":
             print("Web number should be 0 or 1.")
             
     else:
-        print("The format should be: python main.py <web_num> <keyword keyword keyword>. Web number should be 0 (Amazon) or 1 (ebay).")
+        print("The format should be: python3 main.py <web_num> <keyword keyword keyword>. Web number should be 0 (Amazon) or 1 (ebay).")
         sys.exit(1)

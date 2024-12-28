@@ -21,20 +21,11 @@ def scrape_amazon_curl(keyword):
 
         page_info = BeautifulSoup(page_info.content, 'html.parser')
         
-        # with open("product_info.txt", "w") as file:
-        #     file.write(page_info.prettify())
-        # print("商品信息已保存！")
-        # print(page_info.prettify())
-        # 爬取商品信息并保存到文件
+
         content_list = process_page_info(page_info)
         save_to_db(content_list)
-    # change to next page
-    # next_page_bar = page_info.find('span', attrs={'class': 's-pagination-strip'})
-    # next_page_bott = next_page_bar.find('li', attrs={'class': 'a-last'})
-    
-    # print_all_from_db()
 
-    # 爬取商品信息
+
 
 async def scrape_amazon(keyword):
     async with async_playwright() as p:
@@ -71,7 +62,6 @@ async def scrape_amazon(keyword):
             # print(page_info)
             page_info = BeautifulSoup(page_info, 'html.parser')
             # print(page_info.prettify())
-            # 爬取商品信息并保存到文件
             content_list = process_page_info(page_info)
             save_to_db(content_list)
             # change to next page
@@ -83,20 +73,9 @@ async def scrape_amazon(keyword):
             await page.wait_for_timeout(1000)
             await page.click("a:has-text('下一页')")
             await page.wait_for_selector('.s-pagination-strip')
-            
-        # print_all_from_db()
-        # with open("product_info.txt", "w") as file:
-        #     file.write(page_info)
-        # print("商品信息已保存！")
-        # 爬取商品信息
 
         await browser.close()
 
-# 运行脚本
 def amazon_run(keyword):
-    # trim keyword
     keyword = keyword.strip()
-    # asyncio.run(scrape_amazon(keyword))
     scrape_amazon_curl(keyword)
-
-# amazon_run("phone")

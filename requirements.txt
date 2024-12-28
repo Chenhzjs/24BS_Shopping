@@ -1,8 +1,0 @@
-beautifulsoup4==4.12.3
-curl_cffi==0.7.2
-playwright==1.48.0
-mysql-connector-python==9.1.0
-flask==3.0.3
-flask-sqlalchemy==3.1.1
-flask-cors==5.0.0
-forex-python==1.8

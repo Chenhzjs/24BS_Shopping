@@ -86,7 +86,4 @@ def scrape_ebay_curl(keyword):
 # 运行脚本
 def ebay_run(keyword):
     scrape_ebay_curl(keyword)
-    # asyncio.run(scrape_ebay(keyword))
-
-# ebay_run("keyboard")
 

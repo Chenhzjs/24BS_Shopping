@@ -6,14 +6,12 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
-    // 简单的邮箱验证（更复杂的验证可以用正则表达式）
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!emailPattern.test(email)) {
         alert('请输入有效的邮箱地址');
         return;
     }
 
-    // 密码和确认密码是否一致
     if (password !== confirmPassword) {
         alert('密码和确认密码不一致');
         return;
@@ -26,7 +24,6 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         password: password
     };
 
-    // 发送 post
     fetch('http://localhost:5001/user/register', {
         method: 'POST',
         headers: {
@@ -34,7 +31,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         },
         body: JSON.stringify(sendData),
     }) 
-    .then(response => response.json()) // 解析 JSON 响应
+    .then(response => response.json()) 
     .then(data => {
         if (data.success) {
             window.location.href = 'login.html';

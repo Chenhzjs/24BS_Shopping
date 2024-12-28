@@ -10,13 +10,11 @@
 
     <script>
        window.addEventListener('DOMContentLoaded', (event) => {
-            // 获取存储的内容
             console.log('DOMContentLoaded');
             // const styleContent = localStorage.getItem('searchResultStyle');
             // const scriptContent = localStorage.getItem('searchResultScript');
             const bodyContent = localStorage.getItem('searchResultBody');
 
-            // 如果有样式内容，则创建并添加到 <head> 中
             // if (styleContent) {
             //     const styleTag = document.createElement('style');
             //     styleTag.innerHTML = styleContent;
@@ -27,11 +25,9 @@
             }
             const items = document.querySelectorAll('.item');
 
-            // 遍历每个商品
             items.forEach(item => {
                 dataId = item.getAttribute('data-id');
                 if (localStorage.getItem(dataId) === 'marked') {
-                    // 如果标记过，添加 'marked' 类
                     item.classList.add('marked');
                     item.querySelector('.btn').textContent = 'Cancel mark';
                 }
@@ -94,16 +90,14 @@
             document.querySelectorAll('.btn').forEach(item => {
                 item.addEventListener('click', function() {
                     // console.log('Mark button clicked');
-                    const parentElement = this.closest('.item'); // 使用 closest 选择最近的父元素
-                    const dataId = parentElement.getAttribute('data-id'); // 获取父元素的 data-id
+                    const parentElement = this.closest('.item'); 
+                    const dataId = parentElement.getAttribute('data-id'); 
                     const parentParentElement = parentElement.closest('.column');
                     const platform_title = parentParentElement.getAttribute('id');
                     const platform = (platform_title == 'amazon-products') ? '0' : '1';
                     const user_id = document.getElementById('userId').textContent.trim();
-                    // 弹出 data-id 的值，确保已正确获取
                     console.log('Data ID: ' + dataId);
 
-                    // 切换标记样式
                     parentElement.classList.toggle('marked');
                     if (parentElement.classList.contains('marked')) {
                         this.textContent = 'Cancel mark';
@@ -113,17 +107,16 @@
                         localStorage.removeItem(dataId);
                     }
 
-                    // 假设需要将标记信息发送到后端
                     fetch('http://localhost:5001/index/mark', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            user_id: user_id, // 发送用户 ID
-                            id: dataId,  // 发送获取的 data-id
-                            platform: platform, // 发送获取的 platform
-                            marked: parentElement.classList.contains('marked') // 是否标记
+                            user_id: user_id, 
+                            id: dataId,  
+                            platform: platform, 
+                            marked: parentElement.classList.contains('marked') 
                         }),
                     })
                     .then(response => {

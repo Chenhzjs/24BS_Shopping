@@ -4,7 +4,6 @@ import os
 
 
 
-# 使用 GET 请求
 url = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=phone&_sacat=0"
 # url = "https://www.amazon.com/s?k=phone" 
 
@@ -14,7 +13,6 @@ response = requests.get(url,
                         },
                         impersonate="chrome101")
 # print(response.json())
-# 检查响应状态码
 print("状态码：", response.status_code)
 if response.status_code == 200:
     print("请求成功！")

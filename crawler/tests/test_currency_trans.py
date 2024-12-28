@@ -1,8 +1,8 @@
 import requests
 
-api_key = "651c433434b3404fb08de0f7f9e6e14b"  # 替换为实际的API密钥
-base_currency = "USD"  # 设定基准货币
-target_currency = "USD"  # 设定目标货币
+api_key = "651c433434b3404fb08de0f7f9e6e14b"  
+base_currency = "USD"  
+target_currency = "USD"  
 
 url = f"https://openexchangerates.org/api/latest.json?app_id={api_key}&base={base_currency}"
 print(url)
