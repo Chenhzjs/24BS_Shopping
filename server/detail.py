@@ -240,9 +240,10 @@ def scrape_product_info(platform, url, price, uuid):
 
 def background_task():
     while True:
+        time.sleep(120*1)  
         print("开始检查 marked_items...")
         fetch_marked_items()
-        time.sleep(120*1)  
+
 
 if __name__ == "__main__":
     background_task()

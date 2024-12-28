@@ -19,28 +19,10 @@ def search_tags(cursor, words):
 
     return []
 def collect_data(web_num, keywords):
-    # 用于存储错误信息
-    error_message = []
+
     print(f"python3 ../crawler/src/main.py {web_num} {keywords}")
-    # 定义运行爬虫的函数
-    def run_crawler():
-        try:
-            os.system(f"python3 ../crawler/src/main.py {web_num} {keywords}")
-        except Exception as e:
-            # 捕获异常并将错误信息存储到 error_message 列表中
-            error_message.append(str(e))
+    os.system(f"python3 ../crawler/src/main.py {web_num} {keywords}")
 
-    # 创建一个线程来运行爬虫
-    crawler_thread = threading.Thread(target=run_crawler)
-    crawler_thread.start()
-
-    # 等待线程完成
-    crawler_thread.join()
-
-    # 如果有错误信息，则返回错误信息
-    if error_message:
-        return -1, f"Error occurred during data collection: {error_message[0]}"
-    
     return 0, "Data collection completed successfully"
 # 登录接口
 @index.route('/search', methods=['POST'])
