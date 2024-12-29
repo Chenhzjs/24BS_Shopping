@@ -107,7 +107,7 @@ def scrape_product_info(platform, url, price, uuid):
                 # # find price_num in price
                 new_price_index = new_price.find(str(new_price_num))
                 new_price = price[:new_price_index + len(str(new_price_num))]
-                new_price_currency = new_price[:new_price_index]
+                new_price_currency = new_price[:new_price_index].strip()
                 if new_price_currency != '$' and new_price_currency != 'USD' and new_price_currency != 'US$' and new_price_currency != 'US $':
                     if "元" in price or "¥" in price:
                         new_price_currency = "CNY"
@@ -178,7 +178,7 @@ def scrape_product_info(platform, url, price, uuid):
                 new_price_num = new_prices[0]
                 # # find new_price_num in new_price
                 new_price_index = new_price.find(str(new_price_num))
-                new_price_currency = new_price[:new_price_index]
+                new_price_currency = new_price[:new_price_index].strip()
                 if new_price_currency != '$' and new_price_currency != 'USD' and new_price_currency != 'US$' and new_price_currency != 'US $':
                     if "元" in new_price or "¥" in new_price:
                         new_price_currency = "CNY"
