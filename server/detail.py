@@ -116,7 +116,7 @@ def scrape_product_info(platform, url, price, uuid):
                         return 
                     rate = converter.get_exchange_rate('USD', new_price_currency)
                     new_price_num = new_price_num / rate
-                new_price = '$' + str(new_price_num)
+                new_price = '$' + str(round(new_price_num, 2))
                 # print(new_price)
                 # insert into db
                 database = "Amazon"

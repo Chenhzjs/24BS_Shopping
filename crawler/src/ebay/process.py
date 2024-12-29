@@ -72,7 +72,7 @@ def extract_content(page_info):
                     continue
                 rate = converter.get_exchange_rate('USD', price_currency)
                 price_num = price_num / rate
-            price = '$' + str(price_num)
+            price = '$' + str(round(price_num, 2))
             # print(price)
             # index = price_index
             # print(index, price_index)

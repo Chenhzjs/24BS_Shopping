@@ -54,7 +54,7 @@ def extract_content(page_info):
                 prices = extract_numbers(price)
                 price_num = prices[0]
                 price_index = price.find(str(price_num))
-                price_currency = price[:price_index]
+                price_currency = price[:price_index].strip()
                 # print(price_currency)
                 if price_currency == '':
                     price_currency = '$'
@@ -67,7 +67,7 @@ def extract_content(page_info):
                         continue
                     rate = converter.get_exchange_rate(price_currency, 'USD')
                     price_num = price_num * rate
-                price = '$' + str(price_num)
+                price = '$' + str(round(price_num, 2))
                 # print(price)
         else: 
             price = "No price"
