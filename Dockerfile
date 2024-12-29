@@ -34,4 +34,3 @@ RUN chmod +x /work/environment.sh
 USER user
 
 ENTRYPOINT ["sh", "-c", "/work/start_docker.sh && tail -f /dev/null"]
-# ENTRYPOINT ["/bin/sh", "-c", "sleep ${timeout:-1800}"]

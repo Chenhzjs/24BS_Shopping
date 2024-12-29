@@ -227,7 +227,7 @@ def scrape_product_info(platform, url, price, uuid):
                         email = cursor.fetchone()["email"]
                         title = "你标记的商品正在降价销售"
                         p_title = product["title"]
-                        body = f"你标记的商品 {p_title} 正在降价销售，原价为 {price}，现价为 {new_price}，请尽快查看！"
+                        body = f"你标记的商品 {p_title} 正在降价销售，原价为 {price}，现价为 {new_price}，请尽快查看！\n\n[BuyByCompare] 客服团队\n"
                         # print(email, title, body)
                         send_email_to(email, title, body, 0)
                     cursor.close()
