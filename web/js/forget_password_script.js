@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        alert(`密码重置链接已发送至: ${email}`);
+        // alert(`密码重置链接已发送至: ${email}`);
         
 
         const sendData = { step: '0', email: email };

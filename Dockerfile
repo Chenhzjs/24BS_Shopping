@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     mysql-server \
+    tmux \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -s /bin/bash user && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -32,5 +33,5 @@ RUN chmod +x /work/environment.sh
 
 USER user
 
-ENTRYPOINT ["/work/start_docker.sh"]
+ENTRYPOINT ["sh", "-c", "/work/start_docker.sh && tail -f /dev/null"]
 # ENTRYPOINT ["/bin/sh", "-c", "sleep ${timeout:-1800}"]

@@ -9,9 +9,6 @@ def login():
     identifier = data.get('username')  
     password = data.get('password')
 
-    # if not identifier or not password:
-    #     return jsonify({'success': False, 'message': '用户名或邮箱和密码不能为空'}), 400
-
     conn = connection.get_db_connection("user")
     cursor = conn.cursor(dictionary=True)
 

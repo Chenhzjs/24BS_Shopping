@@ -1,5 +1,5 @@
 import asyncio
-from playwright.async_api import async_playwright
+# from playwright.async_api import async_playwright
 import json
 from curl_cffi import requests
 
@@ -27,54 +27,54 @@ def scrape_amazon_curl(keyword):
 
 
 
-async def scrape_amazon(keyword):
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
-        context = await browser.new_context()
+# async def scrape_amazon(keyword):
+#     async with async_playwright() as p:
+#         browser = await p.chromium.launch(headless=False)
+#         context = await browser.new_context()
         
-        page = await context.new_page()
-        # await context.route("**/*", lambda route, request: 
-        # route.abort() if request.resource_type in ["image", "font"] else route.continue_())
-        # 
-        url = f"https://www.amazon.com/s?k={keyword}"
-        await page.goto(url)
-        # await page.wait_for_load_state('load')
-        # change country to China
-        await page.wait_for_selector('#nav-global-location-popover-link')
-        await page.wait_for_timeout(1000)
-        await page.click('#nav-global-location-popover-link')
-        await page.wait_for_selector('#GLUXCountryListDropdown')
-        await page.wait_for_timeout(1000)
-        await page.click('#GLUXCountryListDropdown')
-        await page.wait_for_selector('#GLUXCountryList_0')
-        await page.wait_for_timeout(1000)
-        await page.click('#GLUXCountryList_0')
-        await page.wait_for_selector('[name="glowDoneButton"]')
-        await page.wait_for_timeout(1000)
-        await page.click('[name="glowDoneButton"]')
-        await page.wait_for_selector('.s-pagination-strip')
+#         page = await context.new_page()
+#         # await context.route("**/*", lambda route, request: 
+#         # route.abort() if request.resource_type in ["image", "font"] else route.continue_())
+#         # 
+#         url = f"https://www.amazon.com/s?k={keyword}"
+#         await page.goto(url)
+#         # await page.wait_for_load_state('load')
+#         # change country to China
+#         await page.wait_for_selector('#nav-global-location-popover-link')
+#         await page.wait_for_timeout(1000)
+#         await page.click('#nav-global-location-popover-link')
+#         await page.wait_for_selector('#GLUXCountryListDropdown')
+#         await page.wait_for_timeout(1000)
+#         await page.click('#GLUXCountryListDropdown')
+#         await page.wait_for_selector('#GLUXCountryList_0')
+#         await page.wait_for_timeout(1000)
+#         await page.click('#GLUXCountryList_0')
+#         await page.wait_for_selector('[name="glowDoneButton"]')
+#         await page.wait_for_timeout(1000)
+#         await page.click('[name="glowDoneButton"]')
+#         await page.wait_for_selector('.s-pagination-strip')
         
         
-        n = 2
-        for i in range(0, n):
-            await page.wait_for_timeout(10000)
-            page_info = await page.content()
-            # print(page_info)
-            page_info = BeautifulSoup(page_info, 'html.parser')
-            # print(page_info.prettify())
-            content_list = process_page_info(page_info)
-            save_to_db(content_list)
-            # change to next page
-            # next_page_bar = page_info.find('span', attrs={'class': 's-pagination-strip'})
-            # next_page_bott = next_page_bar.find('li', attrs={'class': 'a-last'})
-            if i == n - 1:
-                break
-            await page.wait_for_selector("a:has-text('下一页')")
-            await page.wait_for_timeout(1000)
-            await page.click("a:has-text('下一页')")
-            await page.wait_for_selector('.s-pagination-strip')
+#         n = 2
+#         for i in range(0, n):
+#             await page.wait_for_timeout(10000)
+#             page_info = await page.content()
+#             # print(page_info)
+#             page_info = BeautifulSoup(page_info, 'html.parser')
+#             # print(page_info.prettify())
+#             content_list = process_page_info(page_info)
+#             save_to_db(content_list)
+#             # change to next page
+#             # next_page_bar = page_info.find('span', attrs={'class': 's-pagination-strip'})
+#             # next_page_bott = next_page_bar.find('li', attrs={'class': 'a-last'})
+#             if i == n - 1:
+#                 break
+#             await page.wait_for_selector("a:has-text('下一页')")
+#             await page.wait_for_timeout(1000)
+#             await page.click("a:has-text('下一页')")
+#             await page.wait_for_selector('.s-pagination-strip')
 
-        await browser.close()
+#         await browser.close()
 
 def amazon_run(keyword):
     keyword = keyword.strip()
