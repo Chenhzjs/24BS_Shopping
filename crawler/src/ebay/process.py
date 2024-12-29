@@ -36,7 +36,7 @@ def extract_content(page_info):
         id = iterm.get('id')
         title = iterm.find('div', attrs={'class':'s-item__title'}).get_text().strip()
         url = iterm.find('a', attrs={'class':'s-item__link'}).get('href')
-        # print(title)
+        print(title)
         _image = iterm.find('div',attrs={'class':'s-item__image-wrapper image-treatment'})
         image = _image.find('img')
         image_url = image.get('src')
@@ -57,16 +57,17 @@ def extract_content(page_info):
             
             price = price.get_text().strip()
             price = price.replace(",", "")
-            # print(price)
+            print(price)
             prices = extract_numbers(price)
             price_num = prices[0]
             # # find price_num in price
             price_index = price.find(str(price_num))
-            price_currency = price[:price_index]
+            price_currency = price[:price_index].strip()
             if price_currency != '$' and price_currency != 'USD' and price_currency != 'US$':
                 if "元" in price or "¥" in price:
                     price_currency = "CNY"
                 # print(price_currency)
+                # print(price_currency not in currency_keys)
                 if price_currency not in currency_keys:
                     continue
                 rate = converter.get_exchange_rate('USD', price_currency)
